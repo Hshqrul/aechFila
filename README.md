@@ -72,6 +72,7 @@ php artisan key:generate
 Run :
 
 ```bash
+npm install
 npm run dev
 OR
 npm run build
