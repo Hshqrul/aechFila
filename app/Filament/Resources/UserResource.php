@@ -51,9 +51,19 @@ class UserResource extends Resource
                             Action::make('resend_verification')
                                 ->label(__('resource.user.actions.resend_verification'))
                                 ->color('info')
-                                ->action(fn(MailSettings $settings, Model $record) => static::doResendEmailVerification($settings, $record)),
+                                ->action(fn(MailSettings $settings, Model $record) => static::doResendEmailVerification($settings, $record))
+                                ->hidden(fn (User $user) => $user->email_verified_at != null),
                         ])
-                            // ->hidden(fn (User $user) => $user->email_verified_at != null)
+                            ->hiddenOn('create')
+                            ->fullWidth(),
+                        Forms\Components\Actions::make([
+                            Action::make('assign_verification')
+                                ->label(__('resource.user.actions.assign_verification'))
+                                ->color('secondary')
+                                // ->action(fn(MailSettings $settings, Model $record) => static::doResendEmailVerification($settings, $record))
+                                ->action(fn(Model $record) => static::doAssignEmailVerification($record))
+                                ->hidden(fn (User $user) => $user->email_verified_at != null),
+                        ])
                             ->hiddenOn('create')
                             ->fullWidth(),
 
@@ -217,7 +227,7 @@ class UserResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['email', 'firstname', 'lastname'];
+        return ['username', 'email', 'firstname', 'lastname'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -258,6 +268,31 @@ class UserResource extends Resource
                 ->title(__('resource.user.notifications.verify_warning.title'))
                 ->body(__('resource.user.notifications.verify_warning.description'))
                 ->warning()
+                ->send();
+        }
+    }
+
+    public static function doAssignEmailVerification($user): void
+    {
+        if (!method_exists($user, 'notify')) {
+            $userClass = $user::class;
+
+            throw new Exception("Model [{$userClass}] does not have a [notify()] method.");
+        }
+
+        if ($user->email_verified_at == null) {
+            $user->email_verified_at = now();
+            $user->save();
+
+            Notification::make()
+                ->title(__('resource.user.notifications.verified_done.title'))
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title(__('resource.user.notifications.verified_warning.title'))
+                ->body(__('resource.user.notifications.verified_warning.description'))
+                ->danger()
                 ->send();
         }
     }

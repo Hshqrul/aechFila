@@ -21,6 +21,10 @@ return [
             'label' => 'Email address',
         ],
 
+        'username' => [
+            'label' => 'Username',
+        ],
+
         'name' => [
             'label' => 'Name',
         ],

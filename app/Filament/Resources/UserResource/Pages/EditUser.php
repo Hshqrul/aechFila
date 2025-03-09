@@ -72,7 +72,14 @@ class EditUser extends EditRecord
 
     public function getTitle(): string|Htmlable
     {
-        $title = $this->record->name;
+        $name = $this->record->name;
+        $username = $this->record->username;
+        if (empty($this->record->firstname) && empty($this->record->lastname)) {
+            $title = $username;
+        } else {
+            $title = $name;
+        }
+
         $badge = $this->getBadgeStatus();
 
         return new HtmlString("

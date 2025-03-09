@@ -57,6 +57,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         'password' => 'hashed',
     ];
 
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            $user->assignRole('author');
+        });
+    }
+
     public function getFilamentName(): string
     {
         return $this->username;

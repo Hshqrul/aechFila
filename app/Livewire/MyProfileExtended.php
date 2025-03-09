@@ -59,10 +59,10 @@ class MyProfileExtended extends MyProfileComponent
                         ->required(),
                     Grid::make()->schema([
                         TextInput::make('username')
-                            ->disabled()
+                            // ->disabled()
                             ->required(),
                         TextInput::make('email')
-                            ->disabled()
+                            // ->disabled()
                             ->required(),
                     ]),
                     Grid::make()->schema([
