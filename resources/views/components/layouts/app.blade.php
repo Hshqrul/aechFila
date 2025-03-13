@@ -20,6 +20,7 @@
     </head>
 
     <body class="antialiased">
+        <x-impersonate::banner style='red' :display='auth()->user()->name'/>
         {{ $slot }}
 
         @livewire('notifications')

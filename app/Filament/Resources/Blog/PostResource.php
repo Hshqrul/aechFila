@@ -67,7 +67,7 @@ class PostResource extends Resource
                         Forms\Components\Select::make('blog_author_id')
                             ->relationship(
                                 name: 'author',
-                                modifyQueryUsing: fn(Builder $query) => $query->with('roles')->whereRelation('roles', 'name', '=', 'admin'),
+                                modifyQueryUsing: fn(Builder $query) => $query->with('roles')->whereRelation('roles', 'name', '=', ['admin', 'author']),
                             )
                             ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->firstname} {$record->lastname}")
                             ->searchable(['firstname', 'lastname'])

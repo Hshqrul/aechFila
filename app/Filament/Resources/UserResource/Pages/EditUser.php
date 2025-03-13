@@ -2,15 +2,16 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
-use App\Filament\Resources\UserResource;
-use Filament\Actions;
 use Filament\Forms;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Actions;
 use Filament\Support;
-use Filament\Support\Enums\Alignment;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Hash;
+use Filament\Support\Enums\Alignment;
+use App\Filament\Resources\UserResource;
+use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
+use STS\FilamentImpersonate\Pages\Actions\Impersonate;
 use JoseEspinal\RecordNavigation\Traits\HasRecordNavigation;
 
 class EditUser extends EditRecord
@@ -99,5 +100,12 @@ class EditUser extends EditRecord
         }
 
         return $badge;
+    }
+
+    protected function getActions(): array
+    {
+        return [
+            Impersonate::make()->record($this->getRecord()) // <--
+        ];
     }
 }

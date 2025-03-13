@@ -3,12 +3,16 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class StatsAdminOverview extends BaseWidget
 {
+
+    use HasWidgetShield;
+    
     protected static ?int $sort = 3;
 
     protected static bool $isLazy = false;

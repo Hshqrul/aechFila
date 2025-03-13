@@ -131,6 +131,12 @@ php artisan superduper:lang-translate en es ar fr pt-PT pt-BR zh-CN zh-TW
 php artisan superduper:lang-translate en fr --json
 ```
 
+###### If your laravel filament app slow
+
+```bash
+php artisan icons:cache
+```
+
 #### Plugins
 
 These are [Filament Plugins](https://filamentphp.com/plugins) use for this project.

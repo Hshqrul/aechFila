@@ -90,8 +90,8 @@ class ManageGeneral extends SettingsPage
                                     ->image()
                                     ->directory('sites')
                                     ->visibility('public')
-                                    ->moveFiles()
-                                    ->required(),
+                                    ->moveFiles(),
+                                    // ->required(),
 
                                 Forms\Components\FileUpload::make('site_favicon')
                                     ->label(fn () => __('page.general_settings.fields.site_favicon'))

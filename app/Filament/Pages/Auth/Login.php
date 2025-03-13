@@ -13,8 +13,8 @@ class Login extends BasePage
         parent::mount();
 
         $this->form->fill([
-            'email' => '',
-            'password' => '',
+            'email' => 'superadmin@aech.com',
+            'password' => 'superadmin',
         ]);
     }
 
@@ -22,8 +22,8 @@ class Login extends BasePage
     {
         return $form
             ->schema([
-                // $this->getEmailFormComponent()->label('Email'),
-                $this->getUsernameFormComponent()->label('Username'),
+                $this->getEmailFormComponent()->label('Email'),
+                // $this->getUsernameFormComponent()->label('Username'),
                 $this->getPasswordFormComponent(),
                 $this->getRememberFormComponent(),
             ]);

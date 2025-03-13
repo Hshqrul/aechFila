@@ -18,15 +18,28 @@ class UsersTableSeeder extends Seeder
         // Superadmin user
         $sid = Str::uuid();
         DB::table('users')->insert([
-            'id' => $sid,
-            'username' => 'superadmin',
-            'firstname' => 'Super',
-            'lastname' => 'Admin',
-            'email' => 'superadmin@starter-kit.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('superadmin'),
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'id' => $sid,
+                'username' => 'superadmin',
+                'firstname' => 'Aech',
+                'lastname' => 'Admin',
+                'email' => 'superadmin@aech.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('superadmin'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => Str::uuid(),
+                'username' => 'founder',
+                'firstname' => 'Aech',
+                'lastname' => 'Founder',
+                'email' => 'founder@aech.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('founder'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
 
         // Bind superadmin user to FilamentShield

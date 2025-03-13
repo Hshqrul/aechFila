@@ -2,28 +2,34 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\EmailVerification;
-use App\Filament\Pages\Auth\Login;
-use App\Filament\Pages\Auth\RequestPasswordReset;
-use App\Filament\Resources\MenuResource;
-use App\Livewire\MyProfileExtended;
-use App\Settings\GeneralSettings;
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation;
 use Filament\Pages;
 use Filament\Panel;
-use Filament\PanelProvider;
 use Filament\Widgets;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Filament\Navigation;
+use Termwind\Enums\Color;
+use Filament\PanelProvider;
+use App\Settings\GeneralSettings;
+use App\Filament\Pages\Auth\Login;
+use App\Livewire\MyProfileExtended;
+use Illuminate\Support\Facades\Storage;
+use App\Filament\Pages\Auth\CustomLogin;
+use App\Filament\Resources\MenuResource;
+use Awcodes\LightSwitch\Enums\Alignment;
+use Awcodes\LightSwitch\LightSwitchPlugin;
+use Filament\Http\Middleware\Authenticate;
+use App\Filament\Pages\Auth\CustomRegister;
+use App\Filament\Pages\Auth\EmailVerification;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Filament\Pages\Auth\RequestPasswordReset;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use CharrafiMed\GlobalSearchModal\GlobalSearchModalPlugin;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -33,15 +39,18 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             // ->path('admin') // if uncomment the page will redirect to /admin/, must uncomment '/' in web.php too
-            ->login(Login::class)
-            ->registration(Pages\Auth\Register::class)
+            ->login(CustomLogin::class)
+            ->registration(CustomRegister::class)
             ->passwordReset(RequestPasswordReset::class)
             ->emailVerification(EmailVerification::class)
             ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
             ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
-            ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
-            ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
-            ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
+            // ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
+            // ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
+            // ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
+            ->colors([
+                'primary' => Color::SKY_700,
+            ])
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
@@ -51,7 +60,7 @@ class AdminPanelProvider extends PanelProvider
                     ->collapsible(false),
                 Navigation\NavigationGroup::make()
                     ->label(__('menu.nav_group.access'))
-                    ->collapsible(false),
+                    ->collapsible(true),
                 Navigation\NavigationGroup::make()
                     ->label(__('menu.nav_group.settings'))
                     ->collapsed(),
@@ -67,7 +76,7 @@ class AdminPanelProvider extends PanelProvider
                     ->group(__('menu.nav_group.activities'))
                     ->sort(99),
             ])
-            ->viteTheme('resources/css/filament/admin/theme.css')
+            // ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->resources([
                 config('filament-logger.activity_resource')
@@ -96,6 +105,18 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                GlobalSearchModalPlugin::make()
+                    ->closeByEscaping(enabled: false),
+                LightSwitchPlugin::make()
+                    ->enabledOn([
+                        'auth.email',
+                        'auth.login',
+                        'auth.password',
+                        'auth.profile',
+                        'auth.register',
+                    ])
+                    ->position(Alignment::TopCenter),
+                    // ->highlightQueryStyles('background-color:rgba(0, 0, 0, 0.27); font-weight: bold;'),
                 \TomatoPHP\FilamentMediaManager\FilamentMediaManagerPlugin::make()
                     ->allowSubFolders(),
                 \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
